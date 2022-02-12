@@ -3,7 +3,7 @@ from math import exp
 import numpy as np
 
 
-class matrix:
+class Matrix:
 
     def __init__(self, rows, columns, values=None):
 
@@ -83,7 +83,7 @@ class matrix:
         if other.columns != self.columns or other.rows != self.rows:
             raise ValueError("Multiplication not possible! Matrix dimensions do not match.")
 
-        result = matrix(self.rows, self.columns)
+        result = Matrix(self.rows, self.columns)
         for i in range(self.rows):
             for j in range(self.columns):
                 result.values[i][j] = self.values[i][j] - other.values[i][j]
@@ -123,7 +123,7 @@ class matrix:
             print("Matrix2: Rows: " + str(matrix2.rows) + ", Columns: " + str(matrix2.columns))
             raise ValueError("Multiplication not possible! Matrix dimensions do not match.")
 
-        result = matrix(matrix1.rows, matrix2.columns)
+        result = Matrix(matrix1.rows, matrix2.columns)
         for i in range(matrix1.rows):
             for j in range(matrix2.columns):
 
@@ -133,7 +133,7 @@ class matrix:
 
     @staticmethod
     def transpose(matrix1):
-        result = matrix(matrix1.columns, matrix1.rows)
+        result = Matrix(matrix1.columns, matrix1.rows)
 
         newValues = []
         for i in range(matrix1.columns):
@@ -162,7 +162,7 @@ class matrix:
 
     @staticmethod
     def asfarray(array):
-        result = matrix(1, len(array))
+        result = Matrix(1, len(array))
         for i in range(len(array)):
             result.values[0][i] = float(array[i])
 

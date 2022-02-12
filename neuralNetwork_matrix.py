@@ -1,4 +1,4 @@
-from matrix import matrix
+from matrix import Matrix
 
 
 # neural network class definition
@@ -25,13 +25,13 @@ class neuralNetwork:
 
         # optionale Änderung
 
-        self.wih = matrix(self.inodes, self.hnodes).random(self.hnodes).T()
-        self.who = matrix(self.hnodes, self.onodes).random(self.hnodes).T()
+        self.wih = Matrix(self.inodes, self.hnodes).random(self.hnodes).T()
+        self.who = Matrix(self.hnodes, self.onodes).random(self.hnodes).T()
 
         # activation function is the sigmoid function
         # self.activation_function = lambda x: scipy.special.expit(x)
 
-        self.activation_function = lambda x: matrix.sigmoid(x)
+        self.activation_function = lambda x: Matrix.sigmoid(x)
 
         pass
 
@@ -39,17 +39,27 @@ class neuralNetwork:
     def train(self, inputs_list, targets_list):
         # convert inputs list to 2d array
 
-        inputs = matrix(len(inputs_list), 1, inputs_list)
-        targets = matrix(len(targets_list), 1, targets_list)
+        if type(inputs_list) is float or type(inputs_list) is int:
+            values = [inputs_list]
+            inputs = Matrix(1, 1, values)
+        else:
+            inputs = Matrix(len(inputs_list), 1, inputs_list)
+
+        if type(targets_list) is float or type(targets_list) is int:
+            values = [targets_list]
+            targets = Matrix(1, 1, values)
+        else:
+            targets = Matrix(len(targets_list), 1, targets_list)
+
 
         # calculate signals into hidden layer
-        hidden_inputs = matrix.dot(self.wih, inputs)
+        hidden_inputs = Matrix.dot(self.wih, inputs)
 
         # calculate the signals emerging from hidden layer
         hidden_outputs = self.activation_function(hidden_inputs)
 
         # calculate signals into final output layer
-        final_inputs = matrix.dot(self.who, hidden_outputs)
+        final_inputs = Matrix.dot(self.who, hidden_outputs)
 
         # calculate the signals emerging from final output layer
         final_outputs = self.activation_function(final_inputs)
@@ -57,16 +67,16 @@ class neuralNetwork:
         # output layer error is the (target - actual)
         output_errors = targets - final_outputs
         # hidden layer error is the output_errors, split by weights, recombined at hidden nodes
-        hidden_errors = matrix.dot(matrix.transpose(self.who), output_errors)
+        hidden_errors = Matrix.dot(Matrix.transpose(self.who), output_errors)
 
         # update the weights for the links between the hidden and output layers
         who1 = (output_errors * final_outputs * (- final_outputs + 1.0))
 
-        self.who += matrix.dot( who1, matrix.transpose(hidden_outputs)) * self.lr
+        self.who += Matrix.dot((output_errors * final_outputs * (- final_outputs + 1.0)), Matrix.transpose(hidden_outputs)) * self.lr
 
         # update the weights for the links between the input and hidden layers
         value2 = (hidden_errors * hidden_outputs * (- hidden_outputs + 1.0))
-        self.wih += matrix.dot(value2, matrix.transpose(inputs)) * self.lr
+        self.wih += Matrix.dot((hidden_errors * hidden_outputs * (- hidden_outputs + 1.0)), Matrix.transpose(inputs)) * self.lr
 
 
         pass
@@ -74,16 +84,20 @@ class neuralNetwork:
     # query the neural network
     def query(self, inputs_list):
         # convert inputs list to 2d array
-        inputs = matrix(len(inputs_list), 1, inputs_list)
+        if type(inputs_list) is float or type(inputs_list) is int:
+            values = [inputs_list]
+            inputs = Matrix(1, 1, values)
+        else:
+            inputs = Matrix(len(inputs_list), 1, inputs_list)
 
         # calculatesignals into hidden layer
-        hidden_inputs = matrix.dot(self.wih, inputs)
+        hidden_inputs = Matrix.dot(self.wih, inputs)
 
         # calculate the signals emerging from hidden layer
         hidden_outputs = self.activation_function(hidden_inputs)
 
         # calculate signals into final ouput layer
-        final_inputs = matrix.dot(self.who, hidden_outputs)
+        final_inputs = Matrix.dot(self.who, hidden_outputs)
 
         # calculate zje signals emerging from final output layer
         final_outputs = self.activation_function(final_inputs)

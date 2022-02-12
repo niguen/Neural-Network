@@ -10,7 +10,7 @@ print(network.query(inputs[0]))
 
 # network.train(inputs[0], outputs[0])
 
-for i in range(10000):
+for i in range(20000):
     for record in range(len(inputs)):
         network.train(inputs[record], outputs[record])
 
