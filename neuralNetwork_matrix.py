@@ -62,7 +62,7 @@ class neuralNetwork:
         final_inputs = Matrix.dot(self.who, hidden_outputs)
 
         # calculate the signals emerging from final output layer
-        final_outputs = self.activation_function(final_inputs)
+        final_outputs = final_inputs
 
         # output layer error is the (target - actual)
         output_errors = targets - final_outputs

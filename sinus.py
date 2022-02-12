@@ -7,6 +7,9 @@ from neuralNetwork import neuralNetwork
 
 network = neuralNetwork(1, 10, 1, 0.4)
 
+ACCEPTABLE_ERROR = 0.001
+EVALUATE_ITERATIONS_COUNT = 1000
+
 values = []
 numValues = 7000
 
@@ -27,19 +30,53 @@ trainData = values[:6000]
 trainTargets = targets[:6000]
 
 testData = values[6000:]
-testTargets = values[6000:]
+testTargets = targets[6000:]
+
+plt.grid()
+plt.title("Sinus")
+
+plt.plot(values, targets, 'x', color='blue')
+plt.draw()
+plt.pause(5)
+
+plt.plot(testData, testTargets, 'o', color='green')
+plt.draw()
+plt.pause(5)
 
 
-for x in range(1000):
-    for i in range(6000):
-        network.train(trainData[i], trainTargets[i])
-    print(str(x) + "%")
+error = 1
+iteration = 0
+networkLine = None
+while error > ACCEPTABLE_ERROR:
+    index = iteration % len(trainData)
+    trainDataItem = trainData[index]
+    trainTargetItem = trainTargets[index]
+    network.train(trainDataItem, trainTargetItem)
 
-results = []
-for i in range(1000):
-    current = network.query(testData[i])
-    results.append(current[0])
+    if iteration % EVALUATE_ITERATIONS_COUNT == 0:
 
-plt.plot(values, targets, 'x')
-plt.plot(testData, results, 'o')
+        testDataHistory = []
+        scorecad = []
+
+        for testDataItem, testTargetItem in zip(testData, testTargets):
+            networkOutput = network.query([testDataItem])[0]
+            testDataHistory.append(networkOutput)
+            diff = testTargetItem - networkOutput
+            scorecad.append(diff)
+        
+        #compute error
+        for errorVal in scorecad:
+            error += abs(errorVal)
+        error /= len(scorecad)
+
+        print("iteration: ", iteration, "\terror: ", "%.4f" % error)
+        if networkLine == None:
+            line, = plt.plot(testData, testDataHistory, '*', color='purple')
+            networkLine = line
+        else:
+            networkLine.set_xdata(testData)
+            networkLine.set_ydata(testDataHistory)
+        plt.pause(0.001)
+    iteration += 1
+    
 plt.show()
