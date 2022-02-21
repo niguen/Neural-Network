@@ -1,4 +1,4 @@
-from neuralNetwork_matrix import neuralNetwork
+from neuralNetwork import neuralNetwork
 
 network = neuralNetwork(2, 10, 1, 0.2)
 
@@ -8,7 +8,7 @@ outputs = [[0], [1], [1], [0]]
 print("Expected result:" + str(outputs[0]))
 print(network.query(inputs[0]))
 
-# network.train(inputs[0], outputs[0])
+network.train(inputs[0], outputs[0])
 
 for i in range(20000):
     for record in range(len(inputs)):
@@ -24,6 +24,6 @@ print("Expected result:" + str(outputs[2]))
 print(network.query(inputs[2]))
 
 print("Expected result:" + str(outputs[3]))
-print(network.query(inputs[3]))
+print(network.query(inputs[3])[0])
 
 

@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 from neuralNetwork import neuralNetwork
 
-network = neuralNetwork(1, 10, 1, 0.4)
+network = neuralNetwork(1, 20, 1, 0.4)
 
 ACCEPTABLE_ERROR = 0.001
 EVALUATE_ITERATIONS_COUNT = 1000
