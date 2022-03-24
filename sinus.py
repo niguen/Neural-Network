@@ -7,7 +7,7 @@ from neuralNetwork import neuralNetwork
 
 network = neuralNetwork(1, 20, 1, 0.4)
 
-ACCEPTABLE_ERROR = 0.001
+ACCEPTABLE_ERROR = 0.01
 EVALUATE_ITERATIONS_COUNT = 1000
 
 values = []
@@ -59,7 +59,7 @@ while error > ACCEPTABLE_ERROR:
         scorecad = []
 
         for testDataItem, testTargetItem in zip(testData, testTargets):
-            networkOutput = network.query([testDataItem])[0]
+            networkOutput = network.query([testDataItem])[0] #.values[0][0]
             testDataHistory.append(networkOutput)
             diff = testTargetItem - networkOutput
             scorecad.append(diff)

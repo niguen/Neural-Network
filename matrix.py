@@ -1,9 +1,42 @@
 from math import exp
 
+# only used to initialize random numbers
 import numpy as np
 
 
 class Matrix:
+    """
+    A class representing a matrix.
+
+    Attributes
+    ----------
+    rows: int
+        The number of rows of the matrix
+
+    columns: int
+        The number of columns of the matrix
+
+    values: list
+        A two-dimensional list containing the values of the matrix
+
+
+    Methods
+    -------
+    toArray()
+        :returns a two-dimensional list with the values of the corresponding matrix
+
+    random(incomingConnections)
+        Fills the matrix with random values that are normal distributed, mean = 0 and
+        standardDeviation = 1/sqrt(incomingConnections)
+
+    T()
+        Transposes the matrix
+
+    def set(self, row: int, column: int, value: float)
+        sets
+
+
+    """
 
     def __init__(self, rows, columns, values=None):
 
@@ -25,13 +58,12 @@ class Matrix:
                 self.values.append(row)
         pass
 
-    def toArray(self):
+    def toArray(self) -> list:
         result = []
         for i in range(self.rows):
             for j in range(self.columns):
                 result.append(self.values[i][j])
         return result
-
 
     def __str__(self):
         string = ""
@@ -39,7 +71,7 @@ class Matrix:
             string += str(self.values[i]) + "\n"
         return string
 
-    def random(self, incommingConnections):
+    def random(self, incommingConnections: int):
         for i in range(self.rows):
             for j in range(self.columns):
                 self.values[i][j] = np.random.normal(0.0, pow(incommingConnections, -0.5))
@@ -106,7 +138,7 @@ class Matrix:
                 self.values[i][j] /= other
         return self
 
-    def set(self, row, column, value):
+    def set(self, row: int, column: int, value: float):
         self.values[row][column] = value
         return self
 

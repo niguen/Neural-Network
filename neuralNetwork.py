@@ -66,17 +66,18 @@ class neuralNetwork:
         hidden_errors = np.dot(self.who.T, output_errors)
 
         # update the weights for the links between the hidden and output layers
-        gradient_output = output_errors * final_outputs * (- final_outputs + 1.0)
-        self.who += self.lr * np.dot(gradient_output,
-                                     np.transpose(hidden_outputs))
 
-        self.bias_output = self.bias_output + (self.lr * gradient_output)
+        gradient_output = output_errors * final_outputs * (- final_outputs + 1.0)
+        self.who += self.lr * np.dot(gradient_output, np.transpose(hidden_outputs))
+        self.bias_output += self.lr * gradient_output
+
 
         # update the weights for the links between the input and hidden layers
 
         gradient_hidden = hidden_errors * hidden_outputs * (- hidden_outputs + 1.0)
         self.wih += self.lr * np.dot(gradient_hidden, np.transpose(inputs))
-        self.bias_hidden = self.bias_hidden + (self.lr * gradient_hidden)
+        self.bias_hidden += self.lr * gradient_hidden
+
 
 
 

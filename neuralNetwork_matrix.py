@@ -16,7 +16,6 @@ class neuralNetwork:
         # learning rate
         self.lr = learningRate
 
-
         # link weight matrices, wih and who
         # wieghts inside the arrays are w_i_j, where link is from node i to node j in the next layer
         # w11 w21
@@ -58,13 +57,13 @@ class neuralNetwork:
         hidden_inputs = Matrix.dot(self.wih, inputs)
 
         # calculate the signals emerging from hidden layer
-        hidden_outputs = self.activation_function(hidden_inputs)
+        hidden_outputs = self.activation_function(hidden_inputs + self.bias_hidden)
 
         # calculate signals into final output layer
         final_inputs = Matrix.dot(self.who, hidden_outputs)
 
         # calculate the signals emerging from final output layer
-        final_outputs = self.activation_function(final_inputs)
+        final_outputs = self.activation_function(final_inputs + self.bias_output)
 
         # output layer error is the (target - actual)
         output_errors = targets - final_outputs
@@ -72,19 +71,14 @@ class neuralNetwork:
         hidden_errors = Matrix.dot(Matrix.transpose(self.who), output_errors)
 
         # update the weights for the links between the hidden and output layers
-        who1 = (output_errors * final_outputs * (- final_outputs + 1.0))
-
-        gradient_output = final_outputs * (- final_outputs + 1.0)
-        self.who += Matrix.dot((output_errors * gradient_output),
-                               Matrix.transpose(hidden_outputs)) * self.lr
-        self.bias_output = self.bias_output + gradient_output
+        gradient_output = output_errors * final_outputs * (- final_outputs + 1.0)
+        self.who += Matrix.dot(gradient_output, Matrix.transpose(hidden_outputs)) * self.lr
+        self.bias_output = self.bias_output + (gradient_output * self.lr)
 
         # update the weights for the links between the input and hidden layers
-        gradient_hidden = hidden_outputs * (- hidden_outputs + 1.0)
-        self.wih += Matrix.dot((hidden_errors * hidden_outputs * (- hidden_outputs + 1.0)),
-                               Matrix.transpose(inputs)) * self.lr
-        self.bias_hidden = self.bias_hidden + gradient_hidden
-
+        gradient_hidden = hidden_errors * hidden_outputs * (- hidden_outputs + 1.0)
+        self.wih += Matrix.dot(gradient_hidden, Matrix.transpose(inputs)) * self.lr
+        self.bias_hidden = self.bias_hidden + (gradient_hidden * self.lr)
 
         pass
 
@@ -99,7 +93,6 @@ class neuralNetwork:
         #     #values = [inputs_list]
         #     #inputs = Matrix(1, 1, values)
 
-
         inputs = Matrix(len(inputs_list), 1, inputs_list)
 
         # calculatesignals into hidden layer
@@ -108,10 +101,10 @@ class neuralNetwork:
         # calculate the signals emerging from hidden layer
         hidden_outputs = self.activation_function(hidden_inputs + self.bias_hidden)
 
-        # calculate signals into final ouput layer
+        # calculate signals into final output layer
         final_inputs = Matrix.dot(self.who, hidden_outputs)
 
-        # calculate zje signals emerging from final output layer
+        # calculate the signals emerging from final output layer
         final_outputs = self.activation_function(final_inputs + self.bias_output)
 
         return final_outputs
